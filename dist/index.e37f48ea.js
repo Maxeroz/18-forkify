@@ -608,10 +608,10 @@ const controlRecipes = async function() {
 };
 const controlSearchResults = async function() {
     try {
-        (0, _resultsViewJsDefault.default).renderSpinner();
         // 1) Get search query
         const query = (0, _searchViewJsDefault.default).getQuery();
         if (!query) return;
+        (0, _resultsViewJsDefault.default).renderSpinner();
         // 2) Load search results
         await _modelJs.loadSearchResults(query);
         // 3) Render results
@@ -2528,7 +2528,7 @@ const loadRecipe = async function(id) {
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
-        console.log(state.recipe);
+    // console.log(state.recipe);
     } catch (err) {
         // Temp error handling
         console.error(`${err} \u{1F4A5}\u{1F4A5}\u{1F4A5}`);
@@ -2539,7 +2539,6 @@ const loadSearchResults = async function(query) {
     try {
         state.search.query = query;
         const data = await (0, _helpersJs.getJSON)(`${(0, _configJs.API_URL)}?search=${query}`);
-        console.log(data);
         state.search.results = data.data.recipes.map((rec)=>{
             return {
                 id: rec.id,
@@ -3123,14 +3122,12 @@ class PaginationView extends (0, _viewJsDefault.default) {
             const btn = e.target.closest(".btn--inline");
             if (!btn) return;
             const goToPage = +btn.dataset.goto;
-            console.log(goToPage);
             handler(goToPage);
         });
     }
     _generateMarkup() {
         const curPage = this._data.page;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        console.log(numPages);
         // Page 1, and there are other pages
         if (curPage === 1 && numPages > 1) return `
         <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
