@@ -49,7 +49,8 @@ export const loadSearchResults = async function (query) {
     state.search.query = query;
     const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`);
 
-    state.search.results = data.data.recipes.map(rec => {
+    // Short results with no description
+    const shortResults = data.data.recipes.map(rec => {
       return {
         id: rec.id,
         title: rec.title,
@@ -58,6 +59,12 @@ export const loadSearchResults = async function (query) {
         ...(rec.key && { key: rec.key }),
       };
     });
+
+    // AJAX call for loading full results
+    const fullResults = await Promise.all(
+      shortResults.map(rec => AJAX(`${API_URL}${rec.id}?key=${KEY}`))
+    );
+    state.search.results = fullResults.map(rec => createRecipeObject(rec));
 
     state.search.page = 1;
   } catch (err) {

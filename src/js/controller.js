@@ -9,6 +9,7 @@ import { MODEL_CLOSE_SEC } from './config.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { async } from 'regenerator-runtime';
 
 ///////////////////////////////////////
 
@@ -50,8 +51,6 @@ const controlSearchResults = async function () {
 
     // 3) Render results
     resultsView.render(model.getSearchResultsPage());
-
-    console.log(model.state.search);
 
     // 4) Render initial pagination buttons
     paginationView.render(model.state.search);
