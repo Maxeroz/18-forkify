@@ -1,5 +1,5 @@
 .search-results {
-  padding: 3rem 0;
+  padding: 0rem 0;
   display: flex;
   flex-direction: column;
 }
@@ -57,4 +57,30 @@
   .twitter-link:visited {
     color: $color-grey-dark-2;
   }
+}
+
+.sorting {
+  display: grid;
+  grid-auto-flow: column;
+  font-size: 15px;
+  background-color: $color-grey-light-1;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 7px;
+}
+
+.sort__par {
+  padding: 0 0 0 1rem;
+}
+
+.sort-btn {
+  width: min-content;
+  border: none;
+  background-color: $color-grey-light-1;
+  cursor: pointer;
+}
+
+.sort-btn:hover {
+  background-color: $color-grey-light-3;
+  border-radius: 3px;
 }
