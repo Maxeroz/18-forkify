@@ -166,15 +166,21 @@ export const uploadRecipe = async function (newRecipe) {
   }
 };
 
-export const sortResults = function () {
+export const sortResults = function (direction) {
   // Take results array according to current pagination
   const resultsDisplayedOnPage = getSearchResultsPage();
 
   // Sorting array ASC
-  resultsDisplayedOnPage.sort((a, b) =>
-    a.cookingTime < b.cookingTime ? 1 : -1
-  );
 
+  if (direction === 'up')
+    resultsDisplayedOnPage.sort((a, b) =>
+      a.cookingTime < b.cookingTime ? 1 : -1
+    );
+  if (direction === 'down') {
+    resultsDisplayedOnPage.sort((a, b) =>
+      a.cookingTime > b.cookingTime ? 1 : -1
+    );
+  }
   // Change state object for being sorted and assigning sorted array to 'resultsCurrentlyOnPage' property
   state.search.sorted = true;
   state.search.resultsCurrentlyOnPage = resultsDisplayedOnPage;

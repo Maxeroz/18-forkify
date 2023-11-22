@@ -132,7 +132,7 @@ const controlAddRecipe = async function (newRecipe) {
 
 const controlSort = function (property, direction) {
   // Change state to sorted
-  model.sortResults();
+  if (property === 'cooking-time') model.sortResults(direction);
   // Update sidebar to render sorted results
   resultsView.update(model.state.search.resultsCurrentlyOnPage);
 };

@@ -14,12 +14,13 @@ class SortingView extends View {
 
       if (property === 'cooking-time' && direction === 'up') {
         console.log('asc sort');
+
+        handler(property, direction);
       }
       if (property === 'cooking-time' && direction === 'down') {
         console.log('dsc sort');
+        handler(property, direction);
       }
-
-      handler();
     });
   }
 }
