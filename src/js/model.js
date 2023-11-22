@@ -9,6 +9,8 @@ export const state = {
     results: [],
     page: 1,
     resultsPerPage: RES_PER_PAGE,
+    resultsCurrentlyOnPage: [],
+    sorted: false,
   },
   bookmarks: [],
 };
@@ -162,6 +164,20 @@ export const uploadRecipe = async function (newRecipe) {
   } catch (err) {
     throw err;
   }
+};
+
+export const sortResults = function () {
+  // Take results array according to current pagination
+  const resultsDisplayedOnPage = getSearchResultsPage();
+
+  // Sorting array ASC
+  resultsDisplayedOnPage.sort((a, b) =>
+    a.cookingTime < b.cookingTime ? 1 : -1
+  );
+
+  // Change state object for being sorted and assigning sorted array to 'resultsCurrentlyOnPage' property
+  state.search.sorted = true;
+  state.search.resultsCurrentlyOnPage = resultsDisplayedOnPage;
 };
 
 // fetchDelete(`${API_URL}65577bbaa239dd001459371d?key=${KEY}`);

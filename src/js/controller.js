@@ -5,6 +5,7 @@ import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import booksmarksView from './views/booksmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
+import sortingView from './views/sortingView.js';
 import { MODEL_CLOSE_SEC } from './config.js';
 
 import 'core-js/stable';
@@ -21,8 +22,14 @@ const controlRecipes = async function () {
     if (!id) return;
     recipeView.renderSpinner();
 
+    console.log(model.state);
+
     // 0) Update results to mark selected search result
-    resultsView.update(model.getSearchResultsPage());
+    if (!model.state.search.sorted)
+      resultsView.update(model.getSearchResultsPage());
+
+    if (model.state.search.sorted)
+      resultsView.update(model.state.search.resultsCurrentlyOnPage);
 
     // 1) Updating bookmarks view
     booksmarksView.update(model.state.bookmarks);
@@ -123,6 +130,13 @@ const controlAddRecipe = async function (newRecipe) {
   }
 };
 
+const controlSort = function (property, direction) {
+  // Change state to sorted
+  model.sortResults();
+  // Update sidebar to render sorted results
+  resultsView.update(model.state.search.resultsCurrentlyOnPage);
+};
+
 const init = function () {
   booksmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
@@ -131,5 +145,6 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView._addHandlerUpload(controlAddRecipe);
+  sortingView.addHandlerSortingClicks(controlSort);
 };
 init();

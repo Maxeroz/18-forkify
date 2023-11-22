@@ -87,11 +87,35 @@
       <div class="search-results">
         <div class="sorting">
           <span class="sort__par">Prep timing</span>
-          <button class="sort-btn">⬆</button>
-          <button class="sort-btn">⬇</button>
+          <button
+            data-property="cooking-time"
+            data-direction="up"
+            class="sort-btn property--asc"
+          >
+            ⬆
+          </button>
+          <button
+            data-property="cooking-time"
+            data-direction="down"
+            class="sort-btn property--dsc"
+          >
+            ⬇
+          </button>
           <span class="sort__par">Ingredients</span>
-          <button class="sort-btn">⬆</button>
-          <button class="sort-btn">⬇</button>
+          <button
+            data-property="ingredients"
+            data-direction="up"
+            class="sort-btn property--asc"
+          >
+            ⬆
+          </button>
+          <button
+            data-property="ingredients"
+            data-direction="down"
+            class="sort-btn property--dsc"
+          >
+            ⬇
+          </button>
         </div>
 
         <ul class="results">
