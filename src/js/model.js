@@ -77,6 +77,7 @@ export const loadSearchResults = async function (query) {
 
 export const getSearchResultsPage = function (page = state.search.page) {
   state.search.page = page;
+  state.search.sorted = false;
 
   const start = (page - 1) * state.search.resultsPerPage; //0
   const end = page * state.search.resultsPerPage; // 9
@@ -166,20 +167,15 @@ export const uploadRecipe = async function (newRecipe) {
   }
 };
 
-export const sortResults = function (direction) {
+export const sortResults = function (property, direction) {
   // Take results array according to current pagination
   const resultsDisplayedOnPage = getSearchResultsPage();
 
-  // Sorting array ASC
-
+  // Sorting array ASC and DSC
   if (direction === 'up')
-    resultsDisplayedOnPage.sort((a, b) =>
-      a.cookingTime < b.cookingTime ? 1 : -1
-    );
+    resultsDisplayedOnPage.sort((a, b) => (a[property] < b[property] ? 1 : -1));
   if (direction === 'down') {
-    resultsDisplayedOnPage.sort((a, b) =>
-      a.cookingTime > b.cookingTime ? 1 : -1
-    );
+    resultsDisplayedOnPage.sort((a, b) => (a[property] > b[property] ? 1 : -1));
   }
   // Change state object for being sorted and assigning sorted array to 'resultsCurrentlyOnPage' property
   state.search.sorted = true;

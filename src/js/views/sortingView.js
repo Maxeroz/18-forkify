@@ -12,15 +12,14 @@ class SortingView extends View {
       const direction = btn.dataset.direction;
       const property = btn.dataset.property;
 
-      if (property === 'cooking-time' && direction === 'up') {
-        console.log('asc sort');
+      // if (property === 'cooking-time' && direction === 'up')
+      handler(property, direction);
 
-        handler(property, direction);
-      }
-      if (property === 'cooking-time' && direction === 'down') {
-        console.log('dsc sort');
-        handler(property, direction);
-      }
+      // if (property === 'cooking-time' && direction === 'down')
+      handler(property, direction);
+
+      // if (property === 'ingredients' && direction === 'up')
+      handler(property, direction);
     });
   }
 }

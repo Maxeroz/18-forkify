@@ -25,6 +25,8 @@ const controlRecipes = async function () {
     console.log(model.state);
 
     // 0) Update results to mark selected search result
+
+    // Check if results sorted
     if (!model.state.search.sorted)
       resultsView.update(model.getSearchResultsPage());
 
@@ -132,8 +134,7 @@ const controlAddRecipe = async function (newRecipe) {
 
 const controlSort = function (property, direction) {
   // Change state to sorted
-  if (property === 'cooking-time') model.sortResults(direction);
-  // Update sidebar to render sorted results
+  model.sortResults(property, direction);
   resultsView.update(model.state.search.resultsCurrentlyOnPage);
 };
 
