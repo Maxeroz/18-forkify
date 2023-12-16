@@ -1,22 +1,39 @@
+// @ts-ignore
 import { async } from 'regenerator-runtime';
-import { API_URL, RES_PER_PAGE, KEY } from './config.js';
-import { AJAX, fetchDelete } from './helpers.js';
+import { API_URL, RES_PER_PAGE, KEY } from './config';
+import { AJAX, fetchDelete } from './helpers';
+import {
+  Ingredient,
+  RecipeType,
+  RecipeSimpleType,
+  RecipeTypeCC,
+  RecipeSimpleTypeAJAX,
+  DataUploadType,
+} from './types';
 
-export const state = {
-  recipe: {},
+type StateType = {
+  recipe?: RecipeTypeCC;
+  search: {
+    query: string;
+    results: RecipeSimpleType[];
+    page: number;
+    resultsPerPage: number;
+  };
+  bookmarks?: RecipeTypeCC[];
+};
+
+export const state: StateType = {
+  recipe: undefined,
   search: {
     query: '',
     results: [],
     page: 1,
     resultsPerPage: RES_PER_PAGE,
-    resultsCurrentlyOnPage: [],
-    sorted: false,
   },
   bookmarks: [],
 };
 
-const createRecipeObject = function (data) {
-  const { recipe } = data.data;
+const createRecipeObject = function (recipe: RecipeType) {
   return {
     id: recipe.id,
     title: recipe.title,
@@ -30,13 +47,22 @@ const createRecipeObject = function (data) {
   };
 };
 
-export const loadRecipe = async function (id) {
+type DataDataType = {
+  recipe: RecipeType;
+};
+
+type DataType = {
+  data: DataDataType;
+  success: string;
+};
+
+export const loadRecipe = async function (id: string) {
   try {
-    const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
+    const data: DataType = await AJAX(`${API_URL}${id}?key=${KEY}`);
 
-    state.recipe = createRecipeObject(data);
+    state.recipe = createRecipeObject(data.data.recipe);
 
-    if (state.bookmarks.some(bookmark => bookmark.id === id)) {
+    if (state?.bookmarks?.some(bookmark => bookmark.id === id)) {
       state.recipe.bookmarked = true;
     } else state.recipe.bookmarked = false;
   } catch (err) {
@@ -45,14 +71,32 @@ export const loadRecipe = async function (id) {
     throw err;
   }
 };
+type DataDataSearch = {
+  recipes: RecipeSimpleTypeAJAX[];
+};
 
-export const loadSearchResults = async function (query) {
+type DataSearch = {
+  data: DataDataSearch;
+  results: number;
+  status: string;
+};
+
+// recipes
+
+// data: {
+//   recipes: Array(45);
+// }
+// results: 45;
+// status: 'success';
+
+export const loadSearchResults = async function (query: string) {
   try {
     state.search.query = query;
-    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`);
+    const data: DataSearch = await AJAX(
+      `${API_URL}?search=${query}&key=${KEY}`
+    );
 
-    // Short results with no description
-    const shortResults = data.data.recipes.map(rec => {
+    state.search.results = data.data.recipes.map(rec => {
       return {
         id: rec.id,
         title: rec.title,
@@ -61,12 +105,6 @@ export const loadSearchResults = async function (query) {
         ...(rec.key && { key: rec.key }),
       };
     });
-
-    // AJAX call for loading full results
-    const fullResults = await Promise.all(
-      shortResults.map(rec => AJAX(`${API_URL}${rec.id}?key=${KEY}`))
-    );
-    state.search.results = fullResults.map(rec => createRecipeObject(rec));
 
     state.search.page = 1;
   } catch (err) {
@@ -77,7 +115,6 @@ export const loadSearchResults = async function (query) {
 
 export const getSearchResultsPage = function (page = state.search.page) {
   state.search.page = page;
-  state.search.sorted = false;
 
   const start = (page - 1) * state.search.resultsPerPage; //0
   const end = page * state.search.resultsPerPage; // 9
@@ -85,37 +122,45 @@ export const getSearchResultsPage = function (page = state.search.page) {
   return state.search.results.slice(start, end);
 };
 
-export const updateServings = function (newServings) {
-  state.recipe.ingredients.forEach(ing => {
-    ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
+export const updateServings = function (newServings: number) {
+  const newRecipe = state?.recipe ? { ...state.recipe } : undefined;
+  if (!newRecipe?.servings) return;
+  state.recipe?.ingredients.forEach(ing => {
+    if (!ing.quantity) return;
+    ing.quantity = (ing.quantity * newServings) / newRecipe.servings;
   });
 
-  state.recipe.servings = newServings;
+  newRecipe.servings = newServings;
 };
 
 const persistBookmarks = function () {
   localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
 };
 
-export const addBookmark = function (recipe) {
+export const addBookmark = function (recipe: RecipeTypeCC) {
+  const newRecipe = state.recipe ? { ...state.recipe } : undefined;
+  if (!newRecipe?.servings) return;
+
   // Add bookmark
-  state.bookmarks.push(recipe);
+  state?.bookmarks?.push(recipe);
 
   // Mark current recipe as bookmark
-  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+  if (recipe.id === state.recipe?.id) newRecipe.bookmarked = true;
 
   persistBookmarks();
 };
 
-export const deleteBookmark = function (id) {
+export const deleteBookmark = function (id: string) {
   // Delete bookmark
-  const index = state.bookmarks.findIndex(
-    recipeBookmark => recipeBookmark.id === id
-  );
-  state.bookmarks.splice(index, 1);
+
+  const bookmarks = state.bookmarks;
+  if (!bookmarks) return;
+
+  const index = bookmarks.findIndex(recipeBookmark => recipeBookmark.id === id);
+  state?.bookmarks?.splice(index, 1);
 
   // Mark current recipe as not bookmark
-  if (id === state.recipe.id) state.recipe.bookmarked = false;
+  if (id === state.recipe?.id) state.recipe.bookmarked = false;
 
   persistBookmarks();
 };
@@ -128,12 +173,12 @@ const init = function () {
 init();
 
 const clearBookmarks = function () {
-  localStorage.clear('bookmarks');
+  localStorage.clear();
 };
 
 // clearBookmarks()
 
-export const uploadRecipe = async function (newRecipe) {
+export const uploadRecipe = async function (newRecipe: DataUploadType) {
   try {
     console.log(newRecipe);
     const ingredients = Object.entries(newRecipe)
@@ -149,7 +194,7 @@ export const uploadRecipe = async function (newRecipe) {
         return { quantity: quantity ? +quantity : null, unit, description };
       });
 
-    const recipe = {
+    const recipe: RecipeType = {
       title: newRecipe.title,
       source_url: newRecipe.sourceUrl,
       image_url: newRecipe.image,
@@ -160,26 +205,11 @@ export const uploadRecipe = async function (newRecipe) {
     };
 
     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
-    state.recipe = createRecipeObject(data);
+    state.recipe = createRecipeObject(data.data.recipe);
     addBookmark(state.recipe);
   } catch (err) {
     throw err;
   }
-};
-
-export const sortResults = function (property, direction) {
-  // Take results array according to current pagination
-  const resultsDisplayedOnPage = getSearchResultsPage();
-
-  // Sorting array ASC and DSC
-  if (direction === 'up')
-    resultsDisplayedOnPage.sort((a, b) => (a[property] < b[property] ? 1 : -1));
-  if (direction === 'down') {
-    resultsDisplayedOnPage.sort((a, b) => (a[property] > b[property] ? 1 : -1));
-  }
-  // Change state object for being sorted and assigning sorted array to 'resultsCurrentlyOnPage' property
-  state.search.sorted = true;
-  state.search.resultsCurrentlyOnPage = resultsDisplayedOnPage;
 };
 
 // fetchDelete(`${API_URL}65577bbaa239dd001459371d?key=${KEY}`);

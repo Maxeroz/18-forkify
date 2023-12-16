@@ -1,7 +1,9 @@
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
+import { Ingredient, RecipeSimpleType, RecipeTypeCC } from '../types';
 
 export default class View {
-  _data;
+  private _data?: RecipeTypeCC | RecipeSimpleType[];
 
   /**
    * Render the recieved object to the DOM
@@ -12,7 +14,8 @@ export default class View {
    * @author Maksim Ozerskii
    * @tofo Finish implementation
    */
-  render(data, render = true) {
+
+  render(data: RecipeTypeCC | RecipeSimpleType[], render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
@@ -25,7 +28,7 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  update(data) {
+  update(data: RecipeTypeCC | RecipeSimpleType) {
     this._data = data;
     const newMarkup = this._generateMarkup();
 
@@ -52,7 +55,7 @@ export default class View {
     });
   }
 
-  _clear() {
+  private _clear() {
     this._parentElement.innerHTML = '';
   }
 

@@ -1,7 +1,9 @@
-import View from './View.js';
-
+import View from './View';
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
+// @ts-ignore
 import fracty from 'fracty';
+// import 'typed-query-selector';
 
 class RecipeView extends View {
   _parentElement = document.querySelector('.recipe');

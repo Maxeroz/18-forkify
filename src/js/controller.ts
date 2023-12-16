@@ -1,18 +1,20 @@
-import * as model from './model.js';
-import recipeView from './views/recipeView.js';
-import searchView from './views/searchView.js';
-import resultsView from './views/resultsView.js';
-import paginationView from './views/paginationView.js';
-import booksmarksView from './views/booksmarksView.js';
-import addRecipeView from './views/addRecipeView.js';
-import sortingView from './views/sortingView.js';
-import { MODEL_CLOSE_SEC } from './config.js';
+import * as model from './model';
+import recipeView from './views/recipeView';
+import searchView from './views/searchView';
+import resultsView from './views/resultsView';
+import paginationView from './views/paginationView';
+import booksmarksView from './views/booksmarksView';
+import addRecipeView from './views/addRecipeView';
+import { MODEL_CLOSE_SEC } from './config';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { async } from 'regenerator-runtime';
 
 ///////////////////////////////////////
+
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 const controlRecipes = async function () {
   try {
@@ -22,16 +24,8 @@ const controlRecipes = async function () {
     if (!id) return;
     recipeView.renderSpinner();
 
-    console.log(model.state);
-
     // 0) Update results to mark selected search result
-
-    // Check if results sorted
-    if (!model.state.search.sorted)
-      resultsView.update(model.getSearchResultsPage());
-
-    if (model.state.search.sorted)
-      resultsView.update(model.state.search.resultsCurrentlyOnPage);
+    resultsView.update(model.getSearchResultsPage());
 
     // 1) Updating bookmarks view
     booksmarksView.update(model.state.bookmarks);
@@ -59,6 +53,7 @@ const controlSearchResults = async function () {
     await model.loadSearchResults(query);
 
     // 3) Render results
+    // resultsView.render(model.state.search.results);
     resultsView.render(model.getSearchResultsPage());
 
     // 4) Render initial pagination buttons
@@ -76,11 +71,12 @@ const controlPagination = function (goToPage) {
   paginationView.render(model.state.search);
 };
 
-const conrolServings = function (newServings) {
+const conrolServings = function (newServings: number) {
   // 1) Update the recipe servings (in a state)
   model.updateServings(newServings);
 
   // 2) Update the recipe view
+  // recipeView.render(model.state.recipe);
   recipeView.update(model.state.recipe);
 };
 
@@ -132,10 +128,8 @@ const controlAddRecipe = async function (newRecipe) {
   }
 };
 
-const controlSort = function (property, direction) {
-  // Change state to sorted
-  model.sortResults(property, direction);
-  resultsView.update(model.state.search.resultsCurrentlyOnPage);
+const newFeature = function () {
+  console.log('Welcome the the appliaction');
 };
 
 const init = function () {
@@ -146,6 +140,6 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView._addHandlerUpload(controlAddRecipe);
-  sortingView.addHandlerSortingClicks(controlSort);
+  newFeature();
 };
 init();

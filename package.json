@@ -11,7 +11,8 @@
   "devDependencies": {
     "@parcel/transformer-sass": "^2.10.2",
     "parcel": "^2.10.2",
-    "sass": "^1.69.5"
+    "sass": "^1.69.5",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "core-js": "^3.33.2",

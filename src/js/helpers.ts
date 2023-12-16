@@ -1,7 +1,9 @@
+// @ts-ignore
 import { async } from 'regenerator-runtime';
 import { TIMEOUT_SEC } from './config';
+import { RecipeTypeCC } from './types';
 
-const timeout = function (s) {
+const timeout = function (s: number) {
   return new Promise(function (_, reject) {
     setTimeout(function () {
       reject(new Error(`Request took too long! Timeout after ${s} second`));
@@ -9,7 +11,10 @@ const timeout = function (s) {
   });
 };
 
-export const AJAX = async function (url, uploadData = undefined) {
+export const AJAX = async function (
+  url: string,
+  uploadData?: Record<string, unknown>
+) {
   try {
     const fetchPro = uploadData
       ? fetch(url, {
@@ -37,7 +42,8 @@ export const AJAX = async function (url, uploadData = undefined) {
  * @param {string} url Link for deleteing recipe from API by id associated to the specific key
  * @author Maksim Ozerskii
  */
-export const fetchDelete = async function (url) {
+
+export const fetchDelete = async function (url: string) {
   const fetchPro = fetch(url, {
     method: 'DELETE',
   });

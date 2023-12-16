@@ -1,5 +1,7 @@
-import View from './View.js';
+import View from './View';
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
+import { RecipeTypeCC, DataUploadType } from '../types';
 
 class addRecipeView extends View {
   _parentElement = document.querySelector('.upload');
@@ -41,6 +43,7 @@ class addRecipeView extends View {
       // const btn = this._parentElement.closest('.upload__btn');
       const dataArr = [...new FormData(this)];
       const data = Object.fromEntries(dataArr);
+      console.log(data);
 
       handler(data);
     });
