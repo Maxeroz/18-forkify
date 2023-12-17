@@ -27,7 +27,7 @@ export const AJAX = async function (
 
     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
     const data = await res.json();
-
+    // TODO
     if (!res.ok) throw new Error(`${data.message} (${res.status})`);
 
     return data;
@@ -41,7 +41,7 @@ export const AJAX = async function (
  * @param {string} url Link for deleteing recipe from API by id associated to the specific key
  * @author Maksim Ozerskii
  */
-export const fetchDelete = async function (url) {
+export const fetchDelete = async function (url: string) {
   const fetchPro = fetch(url, {
     method: 'DELETE',
   });
