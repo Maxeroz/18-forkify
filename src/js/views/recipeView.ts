@@ -1,6 +1,7 @@
 import View from './View.js';
-
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
+// @ts-ignore
 import fracty from 'fracty';
 
 class RecipeView extends View {
@@ -8,12 +9,14 @@ class RecipeView extends View {
   _errorMessage = 'We could not find that recipe. Please try another one!';
   _message = '';
 
-  addHandlerRender(handler) {
+  addHandlerRender(handler: () => void) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
   }
 
-  addHandlerUpdateServings(handler) {
+  addHandlerUpdateServings(handler: (newServings: number) => void) {
+    if (!this._parentElement) return;
     this._parentElement.addEventListener('click', function (e) {
+      if (!e.target) return;
       const btn = e.target.closest('.btn--update-servings');
       if (!btn) return;
 
@@ -23,7 +26,8 @@ class RecipeView extends View {
     });
   }
 
-  addHandlerAddBookmark(handler) {
+  addHandlerAddBookmark(handler: () => void) {
+    if (!this._parentElement) return;
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--bookmark');
 

@@ -1,11 +1,22 @@
 import View from './View.js';
+import { RecipeTypeCC } from '../types';
 
 class SortingView extends View {
   _parentElement = document.querySelector('.sorting');
+  _message = '';
+  _errorMessage = '';
 
-  addHandlerSortingClicks(handler) {
+  _generateMarkup() {
+    return '';
+  }
+
+  addHandlerSortingClicks(
+    handler: (property: keyof RecipeTypeCC, direction: string) => void
+  ) {
+    if (!this._parentElement) return;
     this._parentElement.addEventListener('click', function (e) {
       //   e.preventDefault();
+      if (!e.target) return;
       const btn = e.target.closest('.sort-btn');
       if (!btn) return;
 

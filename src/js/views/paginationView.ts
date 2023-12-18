@@ -1,12 +1,17 @@
 import View from './View.js';
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
 
 class PaginationView extends View {
   _parentElement = document.querySelector('.pagination');
+  _message = '';
+  _errorMessage = '';
 
-  addHandlerClick(handler) {
+  addHandlerClick(handler: (goToPage: number) => void) {
+    if (!this._parentElement) return;
     this._parentElement.addEventListener('click', function (e) {
-      const btn = e.target.closest('.btn--inline');
+      // #TODO
+      const btn = e.target?.closest('.btn--inline');
       if (!btn) return;
 
       const goToPage = +btn.dataset.goto;
@@ -16,6 +21,7 @@ class PaginationView extends View {
   }
 
   _generateMarkup() {
+    if (!this._data) return;
     const curPage = this._data.page;
 
     const numPages = Math.ceil(

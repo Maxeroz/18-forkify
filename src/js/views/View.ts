@@ -1,9 +1,14 @@
 // @ts-ignore
 import icons from 'url:../../img/icons.svg';
+import { RecipeSimpleType, RecipeTypeCC, SearchType } from '../types';
 
-export default class View {
-  _data;
+export default abstract class View {
+  _data?: RecipeTypeCC | RecipeSimpleType[] | RecipeTypeCC[] | SearchType;
 
+  abstract _generateMarkup(): string | undefined;
+  abstract _parentElement: Element | null;
+  abstract _errorMessage: string;
+  abstract _message: string;
   /**
    * Render the recieved object to the DOM
    * @param {Object | Object[]} data The data to be rendered (e.g recipe)
@@ -13,20 +18,29 @@ export default class View {
    * @author Maksim Ozerskii
    * @tofo Finish implementation
    */
-  render(data, render = true) {
+
+  render(
+    data?: RecipeTypeCC | RecipeSimpleType[] | RecipeTypeCC[] | SearchType,
+    render = true
+  ) {
+    if (!this._parentElement) return;
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
-    const markup = this._generateMarkup();
+    const markup: string | undefined = this._generateMarkup();
 
     if (!render) return markup;
 
     this._clear();
-    this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    if (!this._parentElement) return;
+    if (markup) this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  update(data) {
+  update(
+    data?: RecipeTypeCC | RecipeSimpleType[] | RecipeTypeCC[] | SearchType
+  ) {
+    if (!this._parentElement) return;
     this._data = data;
     const newMarkup = this._generateMarkup();
 
@@ -54,10 +68,12 @@ export default class View {
   }
 
   _clear() {
+    if (!this._parentElement) return;
     this._parentElement.innerHTML = '';
   }
 
   renderSpinner() {
+    if (!this._parentElement) return;
     const markup = `
       <div class="spinner">
         <svg>
@@ -71,6 +87,7 @@ export default class View {
   }
 
   renderError(message = this._errorMessage) {
+    if (!this._parentElement) return;
     const markup = `
       <div class="error">
         <div>
@@ -87,6 +104,7 @@ export default class View {
   }
 
   renderMessage(message = this._message) {
+    if (!this._parentElement) return;
     const markup = `
     <div class="message">
         <div>

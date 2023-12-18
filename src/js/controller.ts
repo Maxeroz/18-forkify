@@ -1,22 +1,26 @@
+// @ts-ignore
+import { async } from 'regenerator-runtime';
+
 import * as model from './model.js';
-import recipeView from './views/recipeView.js';
-import searchView from './views/searchView.js';
-import resultsView from './views/resultsView.js';
-import paginationView from './views/paginationView.js';
-import booksmarksView from './views/booksmarksView.js';
-import addRecipeView from './views/addRecipeView.js';
-import sortingView from './views/sortingView.js';
-import { MODEL_CLOSE_SEC } from './config.js';
+import recipeView from './views/recipeView';
+import searchView from './views/searchView';
+import resultsView from './views/resultsView';
+import paginationView from './views/paginationView';
+import booksmarksView from './views/booksmarksView';
+import addRecipeView from './views/addRecipeView';
+import sortingView from './views/sortingView';
+import { MODEL_CLOSE_SEC } from './config';
+import { DataUploadType, RecipeTypeCC } from './types';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { async } from 'regenerator-runtime';
+import { RecipeType } from './types.js';
 
 ///////////////////////////////////////
 
 const controlRecipes = async function () {
   try {
-    const id = window.location.hash.slice(1);
+    const id: string = window.location.hash.slice(1);
     // console.log(id);
 
     if (!id) return;
@@ -68,7 +72,7 @@ const controlSearchResults = async function () {
   }
 };
 
-const controlPagination = function (goToPage) {
+const controlPagination = function (goToPage: number): void {
   // 2) Render NEW results
   resultsView.render(model.getSearchResultsPage(goToPage));
 
@@ -76,7 +80,7 @@ const controlPagination = function (goToPage) {
   paginationView.render(model.state.search);
 };
 
-const conrolServings = function (newServings) {
+const conrolServings = function (newServings: number) {
   // 1) Update the recipe servings (in a state)
   model.updateServings(newServings);
 
@@ -86,6 +90,7 @@ const conrolServings = function (newServings) {
 
 const controlAddBookmark = function () {
   // 1) Add/remove bookmark
+
   if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
 
@@ -100,7 +105,7 @@ const controlBookmarks = function () {
   booksmarksView.render(model.state.bookmarks);
 };
 
-const controlAddRecipe = async function (newRecipe) {
+const controlAddRecipe = async function (newRecipe: DataUploadType) {
   try {
     // Show loading Spinner
     addRecipeView.renderSpinner();
@@ -132,7 +137,7 @@ const controlAddRecipe = async function (newRecipe) {
   }
 };
 
-const controlSort = function (property, direction) {
+const controlSort = function (property: keyof RecipeTypeCC, direction: string) {
   // Change state to sorted
   model.sortResults(property, direction);
   resultsView.update(model.state.search.resultsCurrentlyOnPage);

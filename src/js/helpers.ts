@@ -27,7 +27,7 @@ export const AJAX = async function (
 
     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
     const data = await res.json();
-    // TODO
+    // #TODO
     if (!res.ok) throw new Error(`${data.message} (${res.status})`);
 
     return data;

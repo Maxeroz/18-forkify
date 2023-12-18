@@ -1,5 +1,6 @@
 import View from './View.js';
 import previewView from './previewView.js';
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
 
 class ResultsView extends View {
@@ -8,6 +9,7 @@ class ResultsView extends View {
   _message = '';
 
   _generateMarkup() {
+    if (!this._data) return;
     return this._data.map(result => previewView.render(result, false)).join('');
   }
 }

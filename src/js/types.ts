@@ -46,8 +46,6 @@ export type RecipeType = {
   bookmarked?: boolean;
 };
 
-type BookmarkType = {};
-
 export type DataUploadType = {
   cookingTime: string;
   image: string;
@@ -61,4 +59,13 @@ export type DataUploadType = {
   servings: string;
   sourceUrl: string;
   title: string;
+};
+
+export type SearchType = {
+  query: string;
+  results?: RecipeTypeCC[];
+  page: number;
+  resultsPerPage: number;
+  resultsCurrentlyOnPage?: RecipeTypeCC[];
+  sorted: boolean;
 };

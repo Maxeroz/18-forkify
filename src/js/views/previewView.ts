@@ -1,10 +1,14 @@
 import View from './View.js';
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
 
 class PreviewView extends View {
-  _parentElement = '';
+  _parentElement = null;
+  _message = '';
+  _errorMessage = '';
 
   _generateMarkup() {
+    if (!this._data) return;
     const id = window.location.hash.slice(1);
 
     return `

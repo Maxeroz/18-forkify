@@ -1,9 +1,13 @@
 import View from './View.js';
+// @ts-ignore
 import icons from 'url:../../img/icons.svg';
+
+import { DataUploadType } from '../types';
 
 class addRecipeView extends View {
   _parentElement = document.querySelector('.upload');
   _message = 'Recipe was successfully uploaded :)';
+  _errorMessage = '';
 
   _window = document.querySelector('.add-recipe-window');
   _overlay = document.querySelector('.overlay');
@@ -17,9 +21,12 @@ class addRecipeView extends View {
   }
 
   toggleWindow() {
-    [this._overlay, this._window].forEach(btn =>
-      btn.classList.toggle('hidden')
-    );
+    if (!this._parentElement) return;
+    if (!this._window) return;
+    [this._overlay, this._window].forEach(btn => {
+      if (!btn) return;
+      btn.classList.toggle('hidden');
+    });
 
     if (!this._window.classList.contains('hidden')) {
       this._parentElement.innerHTML = this._generateMarkup();
@@ -27,15 +34,19 @@ class addRecipeView extends View {
   }
 
   _addHandlerShowWindow() {
+    if (!this._btnOpen) return;
     this._btnOpen.addEventListener('click', this.toggleWindow.bind(this));
   }
 
   _addHandlerHideWindow() {
+    if (!this._btnClose) return;
+    if (!this._overlay) return;
     this._btnClose.addEventListener('click', this.toggleWindow.bind(this));
     this._overlay.addEventListener('click', this.toggleWindow.bind(this));
   }
 
-  _addHandlerUpload(handler) {
+  _addHandlerUpload(handler: (newRecipe: DataUploadType) => void) {
+    if (!this._parentElement) return;
     this._parentElement.addEventListener('submit', function (e) {
       e.preventDefault();
       // const btn = this._parentElement.closest('.upload__btn');

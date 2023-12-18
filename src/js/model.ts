@@ -9,18 +9,12 @@ import {
   RecipeTypeCC,
   RecipeSimpleTypeAJAX,
   DataUploadType,
+  SearchType,
 } from './types';
 
 type StateType = {
   recipe?: RecipeTypeCC;
-  search: {
-    query: string;
-    results?: RecipeTypeCC[];
-    page: number;
-    resultsPerPage: number;
-    resultsCurrentlyOnPage?: RecipeTypeCC[];
-    sorted: boolean;
-  };
+  search: SearchType;
   bookmarks?: RecipeTypeCC[];
 };
 
@@ -230,7 +224,7 @@ export const sortResults = function (
   // Sorting array ASC and DSC
   if (direction === 'up')
     resultsDisplayedOnPage.sort((a: RecipeTypeCC, b: RecipeTypeCC) => {
-      // TODO
+      // #TODO
       return a[property] < b[property] ? 1 : -1;
     });
   if (direction === 'down') {
