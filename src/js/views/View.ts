@@ -23,18 +23,19 @@ export default abstract class View {
     data?: RecipeTypeCC | RecipeSimpleType[] | RecipeTypeCC[] | SearchType,
     render = true
   ) {
-    if (!this._parentElement) return;
+    // if (!this._parentElement) return;
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
     const markup: string | undefined = this._generateMarkup();
-
+    console.log(markup);
     if (!render) return markup;
 
     this._clear();
     if (!this._parentElement) return;
-    if (markup) this._parentElement.insertAdjacentHTML('afterbegin', markup);
+    if (!markup) return;
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   update(

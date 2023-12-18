@@ -1,4 +1,4 @@
-import View from './View.js';
+import View from './View';
 // @ts-ignore
 import icons from 'url:../../img/icons.svg';
 
@@ -10,7 +10,7 @@ class PreviewView extends View {
   _generateMarkup() {
     if (!this._data) return;
     const id = window.location.hash.slice(1);
-
+    console.log(this._data, id);
     return `
     <li class="preview">
         <a class="preview__link ${

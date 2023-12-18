@@ -1,7 +1,7 @@
 // @ts-ignore
 import { async } from 'regenerator-runtime';
 
-import * as model from './model.js';
+import * as model from './model';
 import recipeView from './views/recipeView';
 import searchView from './views/searchView';
 import resultsView from './views/resultsView';
@@ -25,8 +25,6 @@ const controlRecipes = async function () {
 
     if (!id) return;
     recipeView.renderSpinner();
-
-    console.log(model.state);
 
     // 0) Update results to mark selected search result
 

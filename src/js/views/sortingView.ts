@@ -1,4 +1,4 @@
-import View from './View.js';
+import View from './View';
 import { RecipeTypeCC } from '../types';
 
 class SortingView extends View {

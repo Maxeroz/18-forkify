@@ -1,7 +1,7 @@
 // @ts-ignore
 import { async } from 'regenerator-runtime';
-import { API_URL, RES_PER_PAGE, KEY } from './config.js';
-import { AJAX, fetchDelete } from './helpers.js';
+import { API_URL, RES_PER_PAGE, KEY } from './config';
+import { AJAX, fetchDelete } from './helpers';
 import {
   Ingredient,
   RecipeType,
@@ -120,7 +120,7 @@ export const getSearchResultsPage = function (page = state.search.page) {
 
   const start: number = (page - 1) * state.search.resultsPerPage; //0
   const end: number = page * state.search.resultsPerPage; // 9
-  if (!state.search.results) return;
+  // if (!state.search.results) return;
   return state.search.results.slice(start, end);
 };
 
